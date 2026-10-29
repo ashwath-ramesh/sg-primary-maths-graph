@@ -1,6 +1,6 @@
-# Singapore Primary Maths Knowledge Graph
+# Singapore Primary Maths Foundations Map
 
-An unofficial prerequisite graph of the **Singapore MOE 2021 Primary Mathematics syllabus (P1–P6)**. It shows every syllabus topic, its learning outcomes in MOE's own words, and which earlier topics it builds on.
+An unofficial **foundations and diagnosis map** of the **Singapore MOE 2021 Primary Mathematics syllabus (P1–P6)**. Pick a topic a child finds hard and it shows which earlier topics to check first, and which gaps compound into later years. Every syllabus topic is included, with its learning outcomes in MOE's own words.
 
 **Live:** https://ashwath-ramesh.github.io/sg-primary-maths-graph/
 
@@ -21,11 +21,18 @@ The PDF's own notice reads: *"© Copyright 2025 Curriculum Planning and Developm
 
 ## How to read it
 
-- **Graph:** one column per level (P1 to P6) and one band per strand. Click a topic to trace it. Solid lines show what it **builds on**; dashed lines show what it **unlocks**. The side panel lists the topic's outcomes and the reason for each link.
-- **Topics:** a sortable, filterable table with one row per topic.
+- **Graph:** one column per level (P1 to P6) and one band per strand. Click a topic to trace it. Solid lines show what it **builds on** (the foundations to check); dashed lines show what it **unlocks** (where a gap shows up later). The side panel lists the topic's outcomes and the reason for each link.
+- **Topics:** a sortable, filterable table with one row per topic. Sort by **Foundations** to see which topics rest on the most earlier work, or by **Affects** to see which gaps reach furthest.
 - **Links:** every prerequisite link with its reason, so each one can be reviewed.
 
 Deep links work: `#P5.PC.1`, `#/graph/P6.RA.1`, `#/topics/P3.FR.1`, `#/links`.
+
+## What this is (and isn't)
+
+- **It is** a map for tracing a struggle back to its foundations, and for seeing which gaps compound. If a P5 child is stuck on Percentage, it lists the earlier topics worth checking.
+- **It isn't** a teaching order. MOE's levels already set that. It also doesn't claim that every topic must be mastered before the next one starts.
+
+The map has one main trunk. Whole numbers and the four operations from P1–P3 feed nearly every later topic. Time, data and graphs, line symmetry and some shape topics are side branches: they are worth learning, but no P6 topic depends on them.
 
 If a link looks wrong, please [open an issue](https://github.com/ashwath-ramesh/sg-primary-maths-graph/issues).
 
