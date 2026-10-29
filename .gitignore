@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+
+# Private progress overlays never belong in this public repo.
+*beast-academy*
+progress-data.js
