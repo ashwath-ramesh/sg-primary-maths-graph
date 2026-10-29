@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SG Primary Maths Graph</title>
-<meta name="description" content="How the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6) build on each other. Unofficial; learning outcomes verbatim from MOE.">
+<meta name="description" content="Trace where a maths struggle starts and which gaps compound, across the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6). Unofficial; learning outcomes verbatim from MOE.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ashwath-ramesh.github.io/sg-primary-maths-graph/">
-<meta property="og:title" content="Singapore Primary Maths Knowledge Graph">
-<meta property="og:description" content="How the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6) build on each other. Unofficial; learning outcomes verbatim from MOE.">
+<meta property="og:title" content="Singapore Primary Maths Foundations Map">
+<meta property="og:description" content="Trace where a maths struggle starts and which gaps compound, across the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6). Unofficial; learning outcomes verbatim from MOE.">
 <meta property="og:image" content="https://ashwath-ramesh.github.io/sg-primary-maths-graph/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Graph of Singapore primary maths topics from P1 to P6, with prerequisite links traced for one topic">
+<meta property="og:image:alt" content="Map of Singapore primary maths topics from P1 to P6, with the foundations of one topic traced">
 <meta name="twitter:card" content="summary_large_image">
 <style>
   :root {
@@ -174,6 +174,7 @@
   .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0 4px; }
   .stats div { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--ink-2); }
   .stats b { display: block; font-size: 18px; color: var(--ink); }
+  .branch { margin: 8px 0 0; font-size: 12px; color: var(--ink-2); }
   .panel h3 { margin: 16px 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
   .outcomes { margin: 0; padding: 0; list-style: none; }
   .outcomes > li { display: grid; grid-template-columns: 30px 1fr; gap: 2px 6px; padding: 3px 0; font-size: 13px; }
@@ -224,7 +225,7 @@
 <body data-view="graph">
 <header class="top">
   <div>
-    <h1>Singapore Primary Maths Knowledge Graph</h1>
+    <h1>Singapore Primary Maths Foundations Map</h1>
     <p class="sub" id="sub"></p>
   </div>
   <nav class="tabs" aria-label="Views">
@@ -247,10 +248,11 @@
 </header>
 
 <dialog class="about" id="about" aria-labelledby="aboutTitle">
-  <div class="ph"><div><h2 id="aboutTitle">How Singapore primary maths topics build on each other</h2></div>
+  <div class="ph"><div><h2 id="aboutTitle">Where does a maths struggle start?</h2></div>
     <button class="x" id="aboutClose" aria-label="Close">×</button></div>
   <p>Every topic in MOE's 2021 Primary Mathematics syllabus, from Primary 1 to Primary 6, and the earlier topics each one builds on.</p>
-  <p><b>How to use it:</b> click a topic your child finds hard. Solid lines trace back to what it builds on; dashed lines show what it leads to. The side panel lists the syllabus outcomes and why each link is there.</p>
+  <p><b>How to use it:</b> click a topic your child finds hard. Solid lines trace back to the foundations worth checking; dashed lines show where a gap there would show up later. The side panel lists the syllabus outcomes and why each link is there.</p>
+  <p>It is a map for finding gaps, not a teaching order: MOE's levels already set the order.</p>
   <p><b>Source:</b> topic names and learning outcomes are copied word for word from the
     <a id="aboutSrc" target="_blank" rel="noopener">MOE Primary Mathematics syllabus</a> (2021 syllabus, updated October 2025).
     The links between topics are my own judgment; MOE doesn't publish them.</p>
@@ -265,8 +267,8 @@
       <div class="sizer" id="sizer"><div class="canvas" id="canvas"></div></div>
     </div>
     <div class="legend">
-      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2"/></svg>builds on (prerequisites)</span>
-      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/></svg>unlocks (what it leads to)</span>
+      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2"/></svg>builds on (foundations to check)</span>
+      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/></svg>unlocks (where a gap shows up later)</span>
       <span class="hint">Hover or click a topic to trace it · Esc to clear</span>
       <span class="src">Unofficial · Topics &amp; outcomes verbatim from the <a id="srcLink" target="_blank" rel="noopener">MOE syllabus</a> · links are v1 editorial (hard, direct only)</span>
     </div>
@@ -281,6 +283,8 @@
           <th data-key="topic"><button class="sort">Topic</button></th><th data-key="strand"><button class="sort">Strand</button></th>
           <th data-key="outcomes"><button class="sort">Outcomes</button></th>
           <th data-key="pre"><button class="sort">Builds on</button></th><th data-key="post"><button class="sort">Unlocks</button></th>
+          <th data-key="anc" title="All earlier topics it rests on, directly or indirectly"><button class="sort">Foundations</button></th>
+          <th data-key="desc" title="All later topics a gap here would affect"><button class="sort">Affects</button></th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -330,6 +334,10 @@
   };
   const ancestors = (id) => closure(id, (x) => pre.get(x).map((d) => d.prerequisiteId));
   const descendants = (id) => closure(id, (x) => post.get(x).map((d) => d.topicId));
+  const nAncOf = new Map(topics.map((t) => [t.id, ancestors(t.id).size]));
+  const nDescOf = new Map(topics.map((t) => [t.id, descendants(t.id).size]));
+  // A side branch: no P6 topic depends on it, so a gap here doesn't compound into the end of primary.
+  const sideBranch = (id) => !id.startsWith('P6.') && ![...descendants(id)].some((x) => x.startsWith('P6.'));
 
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const sc = (t) => strandCode[t.strand];
@@ -488,7 +496,7 @@
     placePanel();
     main.classList.toggle('has-panel', !!t);
     if (!t) return;
-    const nAnc = ancestors(t.id).size, nDesc = descendants(t.id).size;
+    const nAnc = nAncOf.get(t.id), nDesc = nDescOf.get(t.id);
     panel.innerHTML = `
       <div class="ph"><div>
         <div class="crumb" data-strand="${sc(t)}"><span class="sw"></span>${levelName(t.level)} · ${esc(t.strand)} › ${esc(t.subStrand)}</div>
@@ -496,16 +504,17 @@
         <div class="meta"><code>${esc(t.id)}</code> · syllabus p.&nbsp;${esc(t.sourcePage)}</div>
       </div><button class="x" id="close" aria-label="Close details">×</button></div>
       <div class="stats">
-        <div><b>${nAnc}</b>topics come before it (${pre.get(t.id).length} direct)</div>
-        <div><b>${nDesc}</b>topics build on it (${post.get(t.id).length} direct)</div>
+        <div><b>${nAnc}</b>foundations to check (${pre.get(t.id).length} direct)</div>
+        <div><b>${nDesc}</b>later topics a gap here affects (${post.get(t.id).length} direct)</div>
       </div>
+      ${sideBranch(t.id) ? '<p class="branch">Side branch: nothing in P6 depends on this.</p>' : ''}
       <h3>Learning outcomes</h3>
       <ol class="outcomes">${t.outcomes.map((o) => `<li><span class="oid">${esc(o.id.split('.').slice(2).join('.'))}</span><span>${esc(o.text)}</span>` +
         (o.items ? `<ul>${o.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '') +
         (o.note ? `<span class="note">(${esc(o.note)})</span>` : '') + `</li>`).join('')}</ol>
-      <h3>Builds directly on</h3>
+      <h3>Check first (direct foundations)</h3>
       ${linkList(pre.get(t.id), 'prerequisiteId', 'Entry point: no prerequisites in v1.')}
-      <h3>Unlocks next</h3>
+      <h3>A gap here shows up in</h3>
       ${linkList(post.get(t.id), 'topicId', 'Nothing later in P1–P6 builds directly on this.')}
       <div class="actions">
         <a href="#/graph/${esc(t.id)}"${state.view === 'graph' ? ' aria-current="page"' : ''}>Show in graph</a>
@@ -524,7 +533,9 @@
     id: (t) => rank.get(t.id), level: (t) => LEVELS.indexOf(t.level), topic: (t) => label(t).toLowerCase(),
     strand: (t) => STRANDS.findIndex((s) => s.name === t.strand), outcomes: (t) => t.outcomes.length,
     pre: (t) => pre.get(t.id).length, post: (t) => post.get(t.id).length,
+    anc: (t) => nAncOf.get(t.id), desc: (t) => nDescOf.get(t.id),
   };
+  const BIGGEST_FIRST = new Set(['anc', 'desc']);
 
   function renderTopics() {
     const q = matcher(state.q), { key, dir } = state.sort;
@@ -548,6 +559,8 @@
           `<li>${esc(o.text)}${o.items ? `: ${esc(o.items.join(', '))}` : ''}${o.note ? ` <i class="ts">(${esc(o.note)})</i>` : ''}</li>`).join('')}</ol></details></td>
         <td>${chips(pre.get(t.id), 'prerequisiteId')}</td>
         <td>${chips(post.get(t.id), 'topicId')}</td>
+        <td class="num">${nAncOf.get(t.id)}</td>
+        <td class="num">${nDescOf.get(t.id)}</td>
       </tr>`).join('');
   }
 
@@ -639,7 +652,7 @@
   $('topicsTable').querySelector('thead').addEventListener('click', (e) => {
     const key = e.target.closest('th[data-key]')?.dataset.key;
     if (!key) return;
-    state.sort = { key, dir: state.sort.key === key ? -state.sort.dir : 1 };
+    state.sort = { key, dir: state.sort.key === key ? -state.sort.dir : BIGGEST_FIRST.has(key) ? -1 : 1 };
     renderTopics();
   });
   $('q').addEventListener('input', (e) => {
