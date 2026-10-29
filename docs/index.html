@@ -25,7 +25,7 @@
     --shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.07);
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root {
       color-scheme: dark;
       --page: #0d0d0d; --surface: #1a1a19; --node: #242423;
       --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
@@ -34,15 +34,6 @@
       --na: #3987e5; --mg: #d95926; --st: #199e70;
       --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
     }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --page: #0d0d0d; --surface: #1a1a19; --node: #242423;
-    --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
-    --grid: #2c2c2a; --axis: #4a4a46;
-    --border: rgba(255,255,255,.10); --border-strong: rgba(255,255,255,.22);
-    --na: #3987e5; --mg: #d95926; --st: #199e70;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
   }
 
   * { box-sizing: border-box; }
@@ -141,7 +132,9 @@
     border: 1px solid var(--border); border-radius: 10px; }
   th { position: sticky; top: 0; z-index: 1; padding: 8px; text-align: left; white-space: nowrap; font-weight: 600;
     color: var(--ink-2); background: var(--surface); border-bottom: 1px solid var(--axis); }
-  th[data-key] { cursor: pointer; user-select: none; }
+  th[data-key] { user-select: none; }
+  th .sort { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+  th .sort:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
   th[aria-sort="ascending"]::after { content: " ↑"; } th[aria-sort="descending"]::after { content: " ↓"; }
   td { padding: 8px; vertical-align: top; border-bottom: 1px solid var(--grid); }
   tbody tr { cursor: pointer; }
@@ -159,6 +152,8 @@
     font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; text-decoration: none; white-space: nowrap;
   }
   .idchip:hover { border-color: var(--ink-2); border-left-color: var(--c); }
+  .rowlink { text-decoration: none; }
+  .rowlink:hover, .rowlink:focus-visible { text-decoration: underline; }
   .arrow { color: var(--muted); }
 
   /* ---- detail panel ---- */
@@ -172,6 +167,7 @@
   .ph > div { flex: 1; min-width: 0; }
   .crumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
   .panel h2 { margin: 4px 0 2px; font-size: 18px; line-height: 1.25; }
+  .panel h2:focus { outline: none; } /* focused by script so screen readers start at the topic */
   .meta { font-size: 12px; color: var(--ink-2); }
   .x { flex: none; width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 8px; background: transparent;
     color: var(--ink-2); font-size: 18px; line-height: 1; cursor: pointer; }
@@ -281,9 +277,10 @@
       <p class="count" id="topicsCount"></p>
       <table id="topicsTable">
         <thead><tr>
-          <th data-key="id">ID</th><th data-key="level">Level</th><th data-key="topic">Topic</th>
-          <th data-key="strand">Strand</th><th data-key="outcomes">Outcomes</th>
-          <th data-key="pre">Builds on</th><th data-key="post">Unlocks</th>
+          <th data-key="id"><button class="sort">ID</button></th><th data-key="level"><button class="sort">Level</button></th>
+          <th data-key="topic"><button class="sort">Topic</button></th><th data-key="strand"><button class="sort">Strand</button></th>
+          <th data-key="outcomes"><button class="sort">Outcomes</button></th>
+          <th data-key="pre"><button class="sort">Builds on</button></th><th data-key="post"><button class="sort">Unlocks</button></th>
         </tr></thead>
         <tbody></tbody>
       </table>
@@ -300,7 +297,7 @@
     </div>
   </section>
 
-  <aside class="panel" id="panel" hidden aria-live="polite"></aside>
+  <aside class="panel" id="panel" hidden aria-labelledby="panelTitle"></aside>
 </main>
 
 <script src="data.js"></script>
@@ -359,7 +356,7 @@
   const nOutcomes = topics.reduce((n, t) => n + t.outcomes.length, 0);
   $('sub').textContent = `MOE 2021 Primary Mathematics syllabus (${source.edition.replace('Updated ', 'updated ')}) · ` +
     `${topics.length} topics · ${nOutcomes} learning outcomes · ${dependencies.length} prerequisite links`;
-  $('srcLink').href = $('aboutSrc').href = source.url;
+  if (/^https:\/\//.test(source.url)) $('srcLink').href = $('aboutSrc').href = source.url;
   $('strands').innerHTML = STRANDS.map((s) =>
     `<button class="chip" data-strand="${s.code}" aria-pressed="true" title="Show or hide ${esc(s.name)}"><span class="sw"></span>` +
     `<span class="full">${esc(s.name)}</span><span class="short">${esc(s.name.split(' ')[0])}</span></button>`).join('');
@@ -377,7 +374,7 @@
       if (state.hidden.has(s.code)) continue;
       const cols = LEVELS.map((l) => topics.filter((t) => t.level === l && sc(t) === s.code)
         .sort((a, b) => subRank[a.subStrand] - subRank[b.subStrand] || rank.get(a.id) - rank.get(b.id)));
-      const rows = Math.max(...cols.map((c) => c.length));
+      const rows = Math.max(0, ...cols.map((c) => c.length));
       const top = y;
       y += L.bandHead;
       cols.forEach((c, ci) => c.forEach((t, ri) => pos.set(t.id, { x: colX(ci), y: y + ri * L.rowH })));
@@ -404,7 +401,7 @@
     G = { pos, W, H };
     const marker = (id, cls) => `<marker id="${id}" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="${cls}" d="M0,0.6 L8,4 L0,7.4 z"/></marker>`;
     const edges = dependencies.filter((d) => pos.has(d.topicId) && pos.has(d.prerequisiteId)).map((d) =>
-      `<path class="e" data-p="${d.prerequisiteId}" data-t="${d.topicId}" d="${edgePath(pos.get(d.prerequisiteId), pos.get(d.topicId))}"/>`).join('');
+      `<path class="e" data-p="${esc(d.prerequisiteId)}" data-t="${esc(d.topicId)}" d="${edgePath(pos.get(d.prerequisiteId), pos.get(d.topicId))}"/>`).join('');
     canvas.style.width = `${W}px`;
     canvas.style.height = `${H}px`;
     canvas.innerHTML =
@@ -414,9 +411,9 @@
       `<svg class="edges" width="${W}" height="${H}" aria-hidden="true"><defs>${marker('ah', 'mk')}${marker('ah-anc', 'mk-anc')}${marker('ah-desc', 'mk-desc')}</defs><g id="edgeG">${edges}</g></svg>` +
       topics.filter((t) => pos.has(t.id)).map((t) => {
         const p = pos.get(t.id);
-        return `<button class="node" data-id="${t.id}" data-strand="${sc(t)}" style="left:${p.x}px;top:${p.y}px;width:${L.nodeW}px;height:${L.nodeH}px"` +
+        return `<button class="node" data-id="${esc(t.id)}" data-strand="${sc(t)}" style="left:${p.x}px;top:${p.y}px;width:${L.nodeW}px;height:${L.nodeH}px"` +
           ` title="${esc(`${t.id} · ${t.name}`)}" aria-label="${esc(`${t.id} ${t.name}, ${levelName(t.level)}, ${t.subStrand}`)}">` +
-          `<span class="n">${esc(t.name)}</span><span class="m">${t.id} · ${esc(t.subStrand)}</span></button>`;
+          `<span class="n">${esc(t.name)}</span><span class="m">${esc(t.id)} · ${esc(t.subStrand)}</span></button>`;
       }).join('');
     applyZoom();
     applyHighlight();
@@ -424,13 +421,15 @@
 
   const narrow = () => innerWidth <= 720;
   const zoomLevel = () => state.zoom ?? Math.min(1.25, Math.max(narrow() ? 0.8 : 0.55, (graphWrap.clientWidth - 4) / G.W));
+  // The panel sits beside the graph on wide screens and is a bottom sheet on narrow ones.
   const panelCover = () => (!panel.hidden && !narrow() ? panel.offsetWidth + 24 : 0);
+  const panelCoverY = () => (!panel.hidden && narrow() ? panel.offsetHeight + 16 : 0);
   function applyZoom() {
     if (!graphWrap.clientWidth) return; // graph view hidden; refit when shown
     const z = zoomLevel();
     canvas.style.transform = `scale(${z})`;
     sizer.style.width = `${G.W * z + panelCover()}px`; // room to scroll nodes out from under the panel
-    sizer.style.height = `${G.H * z}px`;
+    sizer.style.height = `${G.H * z + panelCoverY()}px`;
     $('zoomLabel').textContent = `${Math.round(z * 100)}%`;
   }
 
@@ -443,7 +442,7 @@
       el.classList.toggle('focus', id === focus);
       el.classList.toggle('anc', anc.has(id));
       el.classList.toggle('desc', desc.has(id));
-      el.classList.toggle('match', !!hit && !focus);
+      el.classList.toggle('match', !!hit);
       el.classList.toggle('dim', focus ? !(id === focus || anc.has(id) || desc.has(id)) : !!q && !hit);
     }
     const g = $('edgeG');
@@ -464,9 +463,9 @@
     if (!p || !graphWrap.clientWidth) return;
     const z = zoomLevel(), w = graphWrap, covered = panelCover();
     const cx = (p.x + L.nodeW / 2) * z, cy = (p.y + L.nodeH / 2) * z;
-    const visibleW = w.clientWidth - covered;
-    if (cx < w.scrollLeft + 40 || cx > w.scrollLeft + visibleW - 40 || cy < w.scrollTop + 30 || cy > w.scrollTop + w.clientHeight - 30)
-      w.scrollTo({ left: cx - visibleW / 2, top: cy - w.clientHeight / 2, behavior: 'smooth' });
+    const visibleW = w.clientWidth - covered, visibleH = w.clientHeight - panelCoverY();
+    if (cx < w.scrollLeft + 40 || cx > w.scrollLeft + visibleW - 40 || cy < w.scrollTop + 30 || cy > w.scrollTop + visibleH - 30)
+      w.scrollTo({ left: cx - visibleW / 2, top: cy - visibleH / 2, behavior: 'smooth' });
   }
 
   // ---------- panel ----------
@@ -475,7 +474,7 @@
     if (!edges.length) return `<p class="empty">${emptyText}</p>`;
     return `<ul class="links">${edges.map((d) => {
       const o = byId.get(d[key]);
-      return `<li><a href="${go(o.id)}" data-strand="${sc(o)}"><span class="sw"></span><span class="lt">${esc(label(o))}</span><span class="lv">${o.id}</span></a>` +
+      return `<li><a href="${go(esc(o.id))}" data-strand="${sc(o)}"><span class="sw"></span><span class="lt">${esc(label(o))}</span><span class="lv">${esc(o.id)}</span></a>` +
         `<div class="why">${esc(d.reason)}</div></li>`;
     }).join('')}</ul>`;
   }
@@ -493,15 +492,15 @@
     panel.innerHTML = `
       <div class="ph"><div>
         <div class="crumb" data-strand="${sc(t)}"><span class="sw"></span>${levelName(t.level)} · ${esc(t.strand)} › ${esc(t.subStrand)}</div>
-        <h2>${esc(t.name)}</h2>
-        <div class="meta"><code>${t.id}</code> · syllabus p.&nbsp;${t.sourcePage}</div>
+        <h2 id="panelTitle" tabindex="-1">${esc(t.name)}</h2>
+        <div class="meta"><code>${esc(t.id)}</code> · syllabus p.&nbsp;${esc(t.sourcePage)}</div>
       </div><button class="x" id="close" aria-label="Close details">×</button></div>
       <div class="stats">
         <div><b>${nAnc}</b>topics come before it (${pre.get(t.id).length} direct)</div>
         <div><b>${nDesc}</b>topics build on it (${post.get(t.id).length} direct)</div>
       </div>
       <h3>Learning outcomes</h3>
-      <ol class="outcomes">${t.outcomes.map((o) => `<li><span class="oid">${o.id.split('.').slice(2).join('.')}</span><span>${esc(o.text)}</span>` +
+      <ol class="outcomes">${t.outcomes.map((o) => `<li><span class="oid">${esc(o.id.split('.').slice(2).join('.'))}</span><span>${esc(o.text)}</span>` +
         (o.items ? `<ul>${o.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '') +
         (o.note ? `<span class="note">(${esc(o.note)})</span>` : '') + `</li>`).join('')}</ol>
       <h3>Builds directly on</h3>
@@ -509,8 +508,8 @@
       <h3>Unlocks next</h3>
       ${linkList(post.get(t.id), 'topicId', 'Nothing later in P1–P6 builds directly on this.')}
       <div class="actions">
-        <a href="#/graph/${t.id}"${state.view === 'graph' ? ' aria-current="page"' : ''}>Show in graph</a>
-        <a href="#/topics/${t.id}"${state.view === 'topics' ? ' aria-current="page"' : ''}>Show in table</a>
+        <a href="#/graph/${esc(t.id)}"${state.view === 'graph' ? ' aria-current="page"' : ''}>Show in graph</a>
+        <a href="#/topics/${esc(t.id)}"${state.view === 'topics' ? ' aria-current="page"' : ''}>Show in table</a>
       </div>`;
     $('close').onclick = () => { location.hash = `#/${state.view}`; };
   }
@@ -518,32 +517,35 @@
   // ---------- tables ----------
   const chips = (edges, key) => edges.map((d) => {
     const o = byId.get(d[key]);
-    return `<a class="idchip" data-strand="${sc(o)}" href="${go(o.id)}" title="${esc(label(o))}">${o.id}</a>`;
+    return `<a class="idchip" data-strand="${sc(o)}" href="${go(esc(o.id))}" title="${esc(label(o))}">${esc(o.id)}</a>`;
   }).join('') || '<span class="arrow">—</span>';
   const visible = (t) => !state.hidden.has(sc(t));
   const sortVal = {
-    id: (t) => rank.get(t.id), level: (t) => rank.get(t.id), topic: (t) => label(t).toLowerCase(),
+    id: (t) => rank.get(t.id), level: (t) => LEVELS.indexOf(t.level), topic: (t) => label(t).toLowerCase(),
     strand: (t) => STRANDS.findIndex((s) => s.name === t.strand), outcomes: (t) => t.outcomes.length,
     pre: (t) => pre.get(t.id).length, post: (t) => post.get(t.id).length,
   };
 
   function renderTopics() {
     const q = matcher(state.q), { key, dir } = state.sort;
-    const rows = topics.filter((t) => visible(t) && (!state.level || t.level === state.level) && (!q || q(hay.get(t.id))))
+    const shown = (t) => visible(t) && (!state.level || t.level === state.level) && (!q || q(hay.get(t.id)));
+    // The selected topic always stays in the table, even when the filters would hide it.
+    const rows = topics.filter((t) => t.id === state.sel || shown(t))
       .sort((a, b) => {
         const x = sortVal[key](a), y = sortVal[key](b);
         return (x < y ? -dir : x > y ? dir : 0) || rank.get(a.id) - rank.get(b.id);
       });
-    $('topicsCount').textContent = `Showing ${rows.length} of ${topics.length} topics. Click a row for details.`;
+    const extra = state.sel && !shown(byId.get(state.sel)) ? ' (plus the selected topic)' : '';
+    $('topicsCount').textContent = `Showing ${rows.length - (extra ? 1 : 0)} of ${topics.length} topics${extra}. Click a row for details.`;
     for (const th of document.querySelectorAll('#topicsTable th[data-key]'))
       th.setAttribute('aria-sort', th.dataset.key === key ? (dir > 0 ? 'ascending' : 'descending') : 'none');
     document.querySelector('#topicsTable tbody').innerHTML = rows.map((t) => `
-      <tr data-id="${t.id}"${t.id === state.sel ? ' class="sel"' : ''}>
-        <td class="mono">${t.id}</td><td>${t.level}</td>
+      <tr data-id="${esc(t.id)}"${t.id === state.sel ? ' class="sel"' : ''}>
+        <td class="mono"><a class="rowlink" href="#/topics/${esc(t.id)}">${esc(t.id)}</a></td><td>${esc(t.level)}</td>
         <td><div class="tn">${esc(t.name)}</div><div class="ts">${esc(t.subStrand)}</div></td>
         <td><span class="strand-cell" data-strand="${sc(t)}"><span class="sw"></span>${esc(t.strand)}</span></td>
         <td><details><summary>${t.outcomes.length}</summary><ol>${t.outcomes.map((o) =>
-          `<li>${esc(o.text)}${o.items ? `: ${esc(o.items.join(', '))}` : ''}</li>`).join('')}</ol></details></td>
+          `<li>${esc(o.text)}${o.items ? `: ${esc(o.items.join(', '))}` : ''}${o.note ? ` <i class="ts">(${esc(o.note)})</i>` : ''}</li>`).join('')}</ol></details></td>
         <td>${chips(pre.get(t.id), 'prerequisiteId')}</td>
         <td>${chips(post.get(t.id), 'topicId')}</td>
       </tr>`).join('');
@@ -556,33 +558,61 @@
       return visible(a) && visible(b) && (!q || q(hay.get(a.id)) || q(hay.get(b.id)) || q(d.reason.toLowerCase()));
     }).sort((x, y) => rank.get(x.topicId) - rank.get(y.topicId) || rank.get(x.prerequisiteId) - rank.get(y.prerequisiteId));
     $('linksCount').textContent = `Showing ${rows.length} of ${dependencies.length} prerequisite links (all "hard" in v1).`;
-    const cell = (t) => `<a class="idchip" data-strand="${sc(t)}" href="#/topics/${t.id}">${t.id}</a> ${esc(label(t))}`;
+    const cell = (t) => `<a class="idchip" data-strand="${sc(t)}" href="#/topics/${esc(t.id)}">${esc(t.id)}</a> ${esc(label(t))}`;
     document.querySelector('#linksTable tbody').innerHTML = rows.map((d) => `
-      <tr data-id="${d.topicId}"${d.topicId === state.sel ? ' class="sel"' : ''}>
+      <tr data-id="${esc(d.topicId)}"${d.topicId === state.sel ? ' class="sel"' : ''}>
         <td>${cell(byId.get(d.prerequisiteId))}</td><td class="arrow">→</td>
         <td>${cell(byId.get(d.topicId))}</td><td class="ts">${esc(d.reason)}</td>
       </tr>`).join('');
   }
 
   // ---------- routing ----------
-  function route() {
-    const h = decodeURIComponent(location.hash);
+  // `fromUser` is false only for the first route on page load, so focus is never moved then.
+  function route(fromUser = true) {
+    let h = location.hash;
+    try { h = decodeURIComponent(h); } catch {} // a stray "%" must not blank the page
     const bare = h.match(/^#(P[1-6]\.[A-Z]{2}\.\d+)$/);
     const m = h.match(/^#\/(graph|topics|links)(?:\/(.+))?$/);
     const view = bare ? 'graph' : m ? m[1] : 'graph';
     const id = bare ? bare[1] : m && m[2];
-    const viewChanged = view !== state.view;
+    const viewChanged = view !== state.view, prevSel = state.sel;
     state.view = view;
     state.sel = id && byId.has(id) ? id : null;
     state.hover = null;
+    const selStrand = state.sel && sc(byId.get(state.sel));
+    if (selStrand && state.hidden.has(selStrand)) { // a deep link into a hidden strand shows it again
+      state.hidden.delete(selStrand);
+      document.querySelector(`#strands .chip[data-strand="${selStrand}"]`).setAttribute('aria-pressed', 'true');
+      renderGraph();
+    }
     document.body.dataset.view = view;
     for (const a of document.querySelectorAll('.tabs a'))
       a.dataset.view === view ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
     for (const v of ['graph', 'topics', 'links']) $(`view-${v}`).classList.toggle('on', v === view);
+    const active = document.activeElement, hadFocus = panel.contains(active);
     renderPanel();
     if (view === 'graph') { applyZoom(); applyHighlight(); if (state.sel) revealNode(state.sel); }
     if (view === 'topics') { renderTopics(); revealRow(viewChanged); }
     if (view === 'links') renderLinks();
+    if (!fromUser) return;
+    if (state.sel && state.sel !== prevSel) {
+      if (!hadFocus) opener = active === document.body ? null : rememberOpener(active); // keep the first opener across panel hops
+      $('panelTitle').focus({ preventScroll: true });
+    } else if (!state.sel && prevSel && (hadFocus || document.activeElement === document.body)) {
+      returnFocus(prevSel);
+    }
+  }
+  // After the panel closes, put focus back on the control that opened it. Tables re-render on every
+  // route, so the opener is found again by its row and href; failing that, by the topic's own control.
+  let opener = null;
+  const rememberOpener = (el) => ({ el, row: el.closest('tr[data-id]')?.dataset.id, href: el.getAttribute('href') });
+  function returnFocus(id) {
+    const o = opener;
+    opener = null;
+    const again = o && (o.el.isConnected ? o.el
+      : o.row && o.href && document.querySelector(`.view.on tr[data-id="${o.row}"] a[href="${o.href}"]`));
+    const own = state.view === 'graph' ? `.node[data-id="${id}"]` : `#topicsTable a.rowlink[href="#/topics/${id}"], #linksTable a[href="#/topics/${id}"]`;
+    (again || document.querySelector(own))?.focus({ preventScroll: true });
   }
   function revealRow(center) {
     const row = state.sel && document.querySelector(`#topicsTable tr[data-id="${state.sel}"]`);
@@ -590,7 +620,7 @@
   }
 
   // ---------- events ----------
-  window.addEventListener('hashchange', route);
+  window.addEventListener('hashchange', () => route());
   canvas.addEventListener('click', (e) => {
     const n = e.target.closest('.node');
     location.hash = n ? `#/graph/${n.dataset.id}` : '#/graph';
@@ -652,7 +682,7 @@
 
   renderGraph();
   state.view = null;
-  route();
+  route(false);
   if (!location.hash && !seen()) about.showModal(); // first visit to the bare URL
 })();
 </script>

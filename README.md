@@ -4,7 +4,7 @@ An unofficial prerequisite graph of the **Singapore MOE 2021 Primary Mathematics
 
 **Live:** https://ashwath-ramesh.github.io/sg-primary-maths-graph/
 
-**v1:** 66 topics · 202 learning outcomes · 95 prerequisite links.
+**v1:** 66 topics · 202 learning outcomes · 103 prerequisite links.
 
 ## Source
 
@@ -44,9 +44,9 @@ There are two kinds of link. A *progression* link joins the same idea at the nex
 ```
 source/                   MOE syllabus PDF, unmodified
 data/topics.json          66 topics with verbatim outcomes (source of truth)
-data/dependencies.json    95 prerequisite links with reasons (source of truth)
+data/dependencies.json    103 prerequisite links with reasons (source of truth)
 data/manifest.json        generated: counts, code tables, checksums
-schema/*.schema.json      JSON Schema for the two data files
+schema/*.schema.json      JSON Schema for the two data files (build.mjs enforces the same rules)
 scripts/build.mjs         validator and generator (Node, no dependencies)
 docs/index.html           the viewer (vanilla JS + SVG), served by GitHub Pages
 docs/data.js              generated bundle the viewer loads
@@ -56,10 +56,15 @@ After editing anything in `data/`, run:
 
 ```sh
 node scripts/build.mjs          # validate, then write data/manifest.json and docs/data.js
-node scripts/build.mjs --check  # validate only
+node scripts/build.mjs --check  # validate, and fail if the generated files are out of date
 ```
 
-The build fails on duplicate or malformed IDs, unknown topics, self-loops, prerequisites at a later level, missing reasons and cycles. It warns about redundant links.
+The build fails on:
+- duplicate or malformed IDs, unknown keys or topics, and missing or empty fields
+- self-loops, prerequisites at a later level, cycles and redundant (transitive) links
+- links that aren't `hard`, missing reasons, and mismatched file versions
+
+`--check` also runs in CI on every push. To try changes on a copy of the data, pass its folder: `node scripts/build.mjs path/to/data` writes `data.js` into that folder, or into `--out <dir>`. Only the repo's own `data/` updates `docs/`.
 
 To view the graph locally, open `docs/index.html` in a browser. It needs no server and works offline.
 

@@ -4,8 +4,8 @@
   "type": "object",
   "required": ["version", "edgeCount", "dependencies"],
   "properties": {
-    "version": { "type": "string" },
-    "note": { "type": "string" },
+    "version": { "type": "string", "minLength": 1, "pattern": "\\S", "description": "Must equal the version in topics.json" },
+    "note": { "type": "string", "minLength": 1, "pattern": "\\S" },
     "edgeCount": { "type": "integer", "minimum": 0 },
     "dependencies": {
       "description": "Directed edges: topicId depends on prerequisiteId. Reverse an edge to get 'unlocks'.",
@@ -14,10 +14,10 @@
         "type": "object",
         "required": ["topicId", "prerequisiteId", "strength", "reason"],
         "properties": {
-          "topicId": { "type": "string" },
-          "prerequisiteId": { "type": "string" },
-          "strength": { "description": "v1 uses only 'hard'", "enum": ["hard", "soft"] },
-          "reason": { "description": "One line: why the prerequisite must come first", "type": "string", "minLength": 1 }
+          "topicId": { "type": "string", "pattern": "^P[1-6]\\.(WN|MO|FR|DE|PC|RT|RA|AL|ME|AV|GE|DR|DA)\\.[1-9]\\d*$" },
+          "prerequisiteId": { "type": "string", "pattern": "^P[1-6]\\.(WN|MO|FR|DE|PC|RT|RA|AL|ME|AV|GE|DR|DA)\\.[1-9]\\d*$" },
+          "strength": { "description": "v1 is hard only; soft links are planned", "enum": ["hard"] },
+          "reason": { "description": "One line: why the prerequisite must come first", "type": "string", "minLength": 1, "pattern": "\\S" }
         },
         "additionalProperties": false
       }
