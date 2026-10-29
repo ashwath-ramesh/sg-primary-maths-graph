@@ -4,18 +4,19 @@
   "type": "object",
   "required": ["version", "source", "topicCount", "topics"],
   "properties": {
-    "version": { "type": "string" },
+    "version": { "type": "string", "minLength": 1, "pattern": "\\S" },
     "source": {
       "type": "object",
       "required": ["title", "publisher", "edition", "url"],
       "properties": {
-        "title": { "type": "string" },
-        "publisher": { "type": "string" },
-        "edition": { "type": "string" },
-        "url": { "type": "string" },
-        "section": { "type": "string" },
-        "copyright": { "type": "string" }
-      }
+        "title": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "publisher": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "edition": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "url": { "type": "string", "pattern": "^https://" },
+        "section": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "copyright": { "type": "string", "minLength": 1, "pattern": "\\S" }
+      },
+      "additionalProperties": false
     },
     "topicCount": { "type": "integer", "minimum": 0 },
     "topics": {
@@ -27,7 +28,7 @@
           "id": {
             "description": "<Level>.<SubStrand>.<n>, mirroring the syllabus numbering, e.g. P3.FR.1",
             "type": "string",
-            "pattern": "^P[1-6]\\.(WN|MO|FR|DE|PC|RT|RA|AL|ME|AV|GE|DR|DA)\\.\\d+$"
+            "pattern": "^P[1-6]\\.(WN|MO|FR|DE|PC|RT|RA|AL|ME|AV|GE|DR|DA)\\.[1-9]\\d*$"
           },
           "level": { "enum": ["P1", "P2", "P3", "P4", "P5", "P6"] },
           "strand": { "enum": ["Number and Algebra", "Measurement and Geometry", "Statistics"] },
@@ -36,7 +37,7 @@
                      "Measurement", "Area and Volume", "Geometry",
                      "Data Representation and Interpretation", "Data Analysis"]
           },
-          "name": { "description": "Topic heading, verbatim from the syllabus", "type": "string" },
+          "name": { "description": "Topic heading, verbatim from the syllabus", "type": "string", "minLength": 1, "pattern": "\\S" },
           "sourcePage": { "description": "Page in the syllabus PDF", "type": "integer" },
           "outcomes": {
             "description": "Learning outcomes, verbatim and in syllabus order",
@@ -46,10 +47,14 @@
               "type": "object",
               "required": ["id", "text"],
               "properties": {
-                "id": { "description": "<topic id>.<n>, e.g. P3.FR.1.2", "type": "string" },
-                "text": { "type": "string" },
-                "items": { "description": "Bullet points listed under the outcome", "type": "array", "items": { "type": "string" } },
-                "note": { "description": "Parenthetical note printed under the outcome", "type": "string" }
+                "id": {
+                  "description": "<topic id>.<n>, numbered 1, 2, 3… in order, e.g. P3.FR.1.2",
+                  "type": "string",
+                  "pattern": "^P[1-6]\\.(WN|MO|FR|DE|PC|RT|RA|AL|ME|AV|GE|DR|DA)\\.[1-9]\\d*\\.[1-9]\\d*$"
+                },
+                "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+                "items": { "description": "Bullet points listed under the outcome", "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "pattern": "\\S" } },
+                "note": { "description": "Parenthetical note printed under the outcome", "type": "string", "minLength": 1, "pattern": "\\S" }
               },
               "additionalProperties": false
             }
