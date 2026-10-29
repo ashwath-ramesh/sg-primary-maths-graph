@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SG MOE Primary Mathematics Knowledge Graph — dependencies",
+  "type": "object",
+  "required": ["version", "edgeCount", "dependencies"],
+  "properties": {
+    "version": { "type": "string" },
+    "note": { "type": "string" },
+    "edgeCount": { "type": "integer", "minimum": 0 },
+    "dependencies": {
+      "description": "Directed edges: topicId depends on prerequisiteId. Reverse an edge to get 'unlocks'.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["topicId", "prerequisiteId", "strength", "reason"],
+        "properties": {
+          "topicId": { "type": "string" },
+          "prerequisiteId": { "type": "string" },
+          "strength": { "description": "v1 uses only 'hard'", "enum": ["hard", "soft"] },
+          "reason": { "description": "One line: why the prerequisite must come first", "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

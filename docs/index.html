@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SG Primary Maths Graph</title>
+<meta name="description" content="How the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6) build on each other. Unofficial; learning outcomes verbatim from MOE.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ashwath-ramesh.github.io/sg-primary-maths-graph/">
+<meta property="og:title" content="Singapore Primary Maths Knowledge Graph">
+<meta property="og:description" content="How the 66 topics of Singapore's MOE 2021 Primary Mathematics syllabus (P1–P6) build on each other. Unofficial; learning outcomes verbatim from MOE.">
+<meta property="og:image" content="https://ashwath-ramesh.github.io/sg-primary-maths-graph/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Graph of Singapore primary maths topics from P1 to P6, with prerequisite links traced for one topic">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --node: #ffffff;
+    --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7;
+    --border: rgba(11,11,11,.10); --border-strong: rgba(11,11,11,.22);
+    --na: #2a78d6; --mg: #eb6834; --st: #1baf7a;
+    --shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 18px rgba(0,0,0,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --node: #242423;
+      --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #4a4a46;
+      --border: rgba(255,255,255,.10); --border-strong: rgba(255,255,255,.22);
+      --na: #3987e5; --mg: #d95926; --st: #199e70;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --node: #242423;
+    --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #4a4a46;
+    --border: rgba(255,255,255,.10); --border-strong: rgba(255,255,255,.22);
+    --na: #3987e5; --mg: #d95926; --st: #199e70;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.45);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; display: flex; flex-direction: column; height: 100dvh;
+    background: var(--page); color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  a { color: inherit; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+  [data-strand="NA"] { --c: var(--na); }
+  [data-strand="MG"] { --c: var(--mg); }
+  [data-strand="ST"] { --c: var(--st); }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--c); flex: none; }
+
+  /* ---- header ---- */
+  header.top {
+    flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px;
+    padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  h1 { margin: 0; font-size: 16px; line-height: 1.25; }
+  .sub { margin: 2px 0 0; font-size: 12px; color: var(--ink-2); }
+  .tabs { display: flex; gap: 2px; padding: 2px; border: 1px solid var(--border); border-radius: 9px; background: var(--page); }
+  .tabs a { padding: 5px 12px; border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--ink-2); text-decoration: none; }
+  .tabs a[aria-current="page"] { background: var(--node); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.10); }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+  input[type="search"], select {
+    height: 32px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 8px;
+    background: var(--node); color: var(--ink); font: inherit; font-size: 13px;
+  }
+  input[type="search"] { width: 230px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px;
+    border: 1px solid var(--border-strong); border-radius: 8px; background: var(--node);
+    color: var(--ink); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .chip[aria-pressed="false"] { color: var(--muted); background: transparent; }
+  .chip[aria-pressed="false"] .sw { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+  .zoom { display: inline-flex; align-items: center; gap: 2px; order: 4; }
+  .chip .short { display: none; }
+  .zoom button { min-width: 32px; justify-content: center; }
+  .zoom output { min-width: 44px; text-align: center; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  [data-only] { display: none !important; }
+  body[data-view="graph"] [data-only~="graph"], body[data-view="topics"] [data-only~="topics"],
+  body[data-view="links"] [data-only~="links"] { display: inline-flex !important; }
+
+  /* ---- views ---- */
+  main { position: relative; flex: 1; min-height: 0; }
+  .view { position: absolute; inset: 0; display: none; flex-direction: column; }
+  .view.on { display: flex; }
+
+  /* ---- graph ---- */
+  .graph-wrap { flex: 1; overflow: auto; background: var(--surface); }
+  .sizer { position: relative; }
+  .canvas { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+  .colbg { position: absolute; top: 0; bottom: 0; border-radius: 14px; background: color-mix(in srgb, var(--grid) 45%, transparent); }
+  .colhead { position: absolute; height: 24px; font-size: 12px; font-weight: 600; color: var(--ink-2); text-align: center; letter-spacing: .02em; }
+  .band { position: absolute; left: 10px; right: 10px; border-radius: 12px;
+    background: color-mix(in srgb, var(--c) 5%, transparent); border: 1px solid color-mix(in srgb, var(--c) 22%, transparent); }
+  .band > span { position: absolute; top: 6px; left: 12px; display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+  svg.edges { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+  path.e { fill: none; stroke: var(--axis); stroke-width: 1.25; marker-end: url(#ah); transition: opacity .15s; }
+  path.e.dim { opacity: .12; }
+  path.e.anc { stroke: var(--ink); stroke-width: 2; marker-end: url(#ah-anc); }
+  path.e.desc { stroke: var(--ink-2); stroke-width: 2; stroke-dasharray: 5 4; marker-end: url(#ah-desc); }
+  .mk { fill: var(--axis); } .mk-anc { fill: var(--ink); } .mk-desc { fill: var(--ink-2); }
+  .node {
+    position: absolute; display: flex; flex-direction: column; justify-content: center; gap: 1px;
+    padding: 4px 10px 4px 11px; border: 1px solid var(--border-strong); border-left: 4px solid var(--c);
+    border-radius: 8px; background: var(--node); color: var(--ink); font: inherit; text-align: left;
+    cursor: pointer; transition: opacity .15s, box-shadow .15s;
+  }
+  .node .n { font-size: 12.5px; font-weight: 600; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .node .m { font-size: 10.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .node:hover { box-shadow: var(--shadow); }
+  .node:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .node.dim { opacity: .25; }
+  .node.anc { border-color: var(--ink); border-left-color: var(--c); }
+  .node.desc { border-style: dashed; border-color: var(--ink-2); border-left: 4px solid var(--c); }
+  .node.match { box-shadow: 0 0 0 2px var(--c); }
+  .node.focus { box-shadow: 0 0 0 2px var(--ink), var(--shadow); }
+  .legend {
+    flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 7px 16px;
+    border-top: 1px solid var(--border); background: var(--surface); font-size: 12px; color: var(--ink-2);
+  }
+  .legend .k { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .src { margin-left: auto; }
+
+  /* ---- tables ---- */
+  .table-wrap { flex: 1; overflow: auto; padding: 0 16px 24px; }
+  main.has-panel .table-wrap { padding-right: 412px; }
+  .count { margin: 0; padding: 12px 0 8px; font-size: 12px; color: var(--ink-2); }
+  table { width: 100%; min-width: 760px; border-collapse: separate; border-spacing: 0; font-size: 13px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 10px; }
+  th { position: sticky; top: 0; z-index: 1; padding: 8px; text-align: left; white-space: nowrap; font-weight: 600;
+    color: var(--ink-2); background: var(--surface); border-bottom: 1px solid var(--axis); }
+  th[data-key] { cursor: pointer; user-select: none; }
+  th[aria-sort="ascending"]::after { content: " ↑"; } th[aria-sort="descending"]::after { content: " ↓"; }
+  td { padding: 8px; vertical-align: top; border-bottom: 1px solid var(--grid); }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+  tbody tr.sel td { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tn { font-weight: 600; }
+  .ts { font-size: 12px; color: var(--ink-2); }
+  .strand-cell { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  details summary { cursor: pointer; color: var(--ink-2); white-space: nowrap; }
+  details ol { margin: 6px 0 0; padding-left: 18px; min-width: 260px; }
+  .idchip {
+    display: inline-block; margin: 1px 3px 1px 0; padding: 0 6px; border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--c); border-radius: 5px; background: var(--node); color: var(--ink);
+    font: 11.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; text-decoration: none; white-space: nowrap;
+  }
+  .idchip:hover { border-color: var(--ink-2); border-left-color: var(--c); }
+  .arrow { color: var(--muted); }
+
+  /* ---- detail panel ---- */
+  .panel {
+    position: absolute; top: 12px; right: 12px; bottom: 12px; z-index: 5; width: 384px; max-width: calc(100% - 24px);
+    overflow: auto; padding: 16px 18px 20px; background: var(--node); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: var(--shadow);
+  }
+  .panel[hidden] { display: none; }
+  .ph { display: flex; align-items: flex-start; gap: 12px; }
+  .ph > div { flex: 1; min-width: 0; }
+  .crumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+  .panel h2 { margin: 4px 0 2px; font-size: 18px; line-height: 1.25; }
+  .meta { font-size: 12px; color: var(--ink-2); }
+  .x { flex: none; width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 8px; background: transparent;
+    color: var(--ink-2); font-size: 18px; line-height: 1; cursor: pointer; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0 4px; }
+  .stats div { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; color: var(--ink-2); }
+  .stats b { display: block; font-size: 18px; color: var(--ink); }
+  .panel h3 { margin: 16px 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+  .outcomes { margin: 0; padding: 0; list-style: none; }
+  .outcomes > li { display: grid; grid-template-columns: 30px 1fr; gap: 2px 6px; padding: 3px 0; font-size: 13px; }
+  .outcomes .oid { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; padding-top: 1px; }
+  .outcomes ul { grid-column: 2; margin: 2px 0 0; padding-left: 16px; color: var(--ink-2); }
+  .outcomes .note { grid-column: 2; font-size: 12px; color: var(--ink-2); font-style: italic; }
+  .links { margin: 0; padding: 0; list-style: none; }
+  .links li { padding: 6px 0; border-bottom: 1px solid var(--grid); }
+  .links li:last-child { border-bottom: 0; }
+  .links a { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; text-decoration: none; }
+  .links a:hover .lt { text-decoration: underline; }
+  .links .lv { margin-left: auto; font-size: 11.5px; font-weight: 500; color: var(--ink-2); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .why { margin: 2px 0 0 17px; font-size: 12px; color: var(--ink-2); }
+  .empty { margin: 0; font-size: 13px; color: var(--ink-2); }
+  .actions { display: flex; gap: 8px; margin-top: 18px; }
+  .actions a { padding: 6px 10px; border: 1px solid var(--border-strong); border-radius: 8px; font-size: 13px; text-decoration: none; }
+  .actions a[aria-current="page"] { display: none; }
+
+  /* ---- about dialog ---- */
+  dialog.about {
+    width: 480px; max-width: calc(100% - 32px); max-height: calc(100dvh - 32px); padding: 18px 20px 20px;
+    border: 1px solid var(--border); border-radius: 12px; background: var(--node); color: var(--ink); box-shadow: var(--shadow);
+  }
+  dialog.about::backdrop { background: rgba(0,0,0,.35); }
+  dialog.about h2 { margin: 0; font-size: 17px; line-height: 1.3; }
+  dialog.about p { margin: 10px 0 0; font-size: 13.5px; color: var(--ink-2); }
+  dialog.about p b { color: var(--ink); }
+  dialog.about .actions { justify-content: flex-end; }
+  dialog.about .actions button { height: 32px; padding: 0 14px; border: 1px solid var(--border-strong); border-radius: 8px;
+    background: var(--ink); color: var(--page); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+  @media (max-width: 1100px) { main.has-panel .table-wrap { padding-right: 16px; } }
+  @media (max-width: 720px) {
+    header.top { gap: 8px 10px; padding: 10px 16px; }
+    h1 { font-size: 15px; }
+    .sub { display: none; }
+    .zoom { order: 2; margin-left: auto; }
+    .toolbar { order: 3; margin-left: 0; width: 100%; gap: 6px; }
+    input[type="search"] { flex: 1 1 100%; width: auto; }
+    .chip .full { display: none; } .chip .short { display: inline; }
+    .panel { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 68%; }
+    .legend { gap: 4px 14px; font-size: 11.5px; }
+    .legend .hint { display: none; }
+    .legend .src { margin-left: 0; }
+  }
+</style>
+</head>
+<body data-view="graph">
+<header class="top">
+  <div>
+    <h1>Singapore Primary Maths Knowledge Graph</h1>
+    <p class="sub" id="sub"></p>
+  </div>
+  <nav class="tabs" aria-label="Views">
+    <a href="#/graph" data-view="graph">Graph</a>
+    <a href="#/topics" data-view="topics">Topics</a>
+    <a href="#/links" data-view="links">Links</a>
+  </nav>
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Search topics and outcomes…" aria-label="Search topics and outcomes" autocomplete="off">
+    <span id="strands" style="display:contents"></span>
+    <select id="level" aria-label="Filter by level" data-only="topics"></select>
+  </div>
+  <span class="zoom" data-only="graph">
+    <button class="chip" id="zoomOut" aria-label="Zoom out">−</button>
+    <output id="zoomLabel">100%</output>
+    <button class="chip" id="zoomIn" aria-label="Zoom in">+</button>
+    <button class="chip" id="zoomFit">Fit</button>
+  </span>
+  <button class="chip" id="aboutBtn" aria-haspopup="dialog">About</button>
+</header>
+
+<dialog class="about" id="about" aria-labelledby="aboutTitle">
+  <div class="ph"><div><h2 id="aboutTitle">How Singapore primary maths topics build on each other</h2></div>
+    <button class="x" id="aboutClose" aria-label="Close">×</button></div>
+  <p>Every topic in MOE's 2021 Primary Mathematics syllabus, from Primary 1 to Primary 6, and the earlier topics each one builds on.</p>
+  <p><b>How to use it:</b> click a topic your child finds hard. Solid lines trace back to what it builds on; dashed lines show what it leads to. The side panel lists the syllabus outcomes and why each link is there.</p>
+  <p><b>Source:</b> topic names and learning outcomes are copied word for word from the
+    <a id="aboutSrc" target="_blank" rel="noopener">MOE Primary Mathematics syllabus</a> (2021 syllabus, updated October 2025).
+    The links between topics are my own judgment; MOE doesn't publish them.</p>
+  <p>Unofficial. Not affiliated with or endorsed by the Ministry of Education.
+    Spotted a link that looks wrong? <a href="https://github.com/ashwath-ramesh/sg-primary-maths-graph" target="_blank" rel="noopener">Tell me on GitHub</a>.</p>
+  <div class="actions"><button id="aboutOk">Explore the graph</button></div>
+</dialog>
+
+<main id="main">
+  <section class="view" id="view-graph" aria-label="Prerequisite graph">
+    <div class="graph-wrap" id="graphWrap">
+      <div class="sizer" id="sizer"><div class="canvas" id="canvas"></div></div>
+    </div>
+    <div class="legend">
+      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2"/></svg>builds on (prerequisites)</span>
+      <span class="k"><svg width="30" height="8" aria-hidden="true"><line x1="0" y1="4" x2="30" y2="4" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4"/></svg>unlocks (what it leads to)</span>
+      <span class="hint">Hover or click a topic to trace it · Esc to clear</span>
+      <span class="src">Unofficial · Topics &amp; outcomes verbatim from the <a id="srcLink" target="_blank" rel="noopener">MOE syllabus</a> · links are v1 editorial (hard, direct only)</span>
+    </div>
+  </section>
+
+  <section class="view" id="view-topics" aria-label="Topic table">
+    <div class="table-wrap">
+      <p class="count" id="topicsCount"></p>
+      <table id="topicsTable">
+        <thead><tr>
+          <th data-key="id">ID</th><th data-key="level">Level</th><th data-key="topic">Topic</th>
+          <th data-key="strand">Strand</th><th data-key="outcomes">Outcomes</th>
+          <th data-key="pre">Builds on</th><th data-key="post">Unlocks</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="view" id="view-links" aria-label="Prerequisite links">
+    <div class="table-wrap">
+      <p class="count" id="linksCount"></p>
+      <table id="linksTable">
+        <thead><tr><th>Prerequisite</th><th></th><th>Topic</th><th>Why</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="panel" id="panel" hidden aria-live="polite"></aside>
+</main>
+
+<script src="data.js"></script>
+<script>
+(() => {
+  const T = window.TAXONOMY;
+  if (!T) {
+    document.getElementById('main').innerHTML =
+      '<p style="padding:24px">docs/data.js is missing. Run <code>node scripts/build.mjs</code> first.</p>';
+    return;
+  }
+  const { codes, topics, dependencies, source } = T;
+  const LEVELS = codes.levels;
+  const STRANDS = codes.strands;
+  const strandCode = Object.fromEntries(STRANDS.map((s) => [s.name, s.code]));
+  const subRank = Object.fromEntries(codes.subStrands.map((s, i) => [s.name, i]));
+  const byId = new Map(topics.map((t) => [t.id, t]));
+  const rank = new Map(topics.map((t, i) => [t.id, i]));
+  const pre = new Map(topics.map((t) => [t.id, []]));   // edges into t (its prerequisites)
+  const post = new Map(topics.map((t) => [t.id, []]));  // edges out of t (what it unlocks)
+  for (const d of dependencies) { pre.get(d.topicId).push(d); post.get(d.prerequisiteId).push(d); }
+  const byRank = (key) => (a, b) => rank.get(a[key]) - rank.get(b[key]);
+  for (const list of pre.values()) list.sort(byRank('prerequisiteId'));
+  for (const list of post.values()) list.sort(byRank('topicId'));
+
+  const closure = (id, next) => {
+    const seen = new Set(), stack = [id];
+    while (stack.length) for (const n of next(stack.pop())) if (!seen.has(n)) { seen.add(n); stack.push(n); }
+    return seen;
+  };
+  const ancestors = (id) => closure(id, (x) => pre.get(x).map((d) => d.prerequisiteId));
+  const descendants = (id) => closure(id, (x) => post.get(x).map((d) => d.topicId));
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const sc = (t) => strandCode[t.strand];
+  const levelName = (l) => `Primary ${l.slice(1)}`;
+  const GENERIC = new Set(['Addition and Subtraction', 'Multiplication and Division', 'Four Operations']);
+  const label = (t) => (GENERIC.has(t.name) ? `${t.subStrand}: ${t.name}` : t.name);
+  const hay = new Map(topics.map((t) => [t.id, [t.id, t.name, t.subStrand, t.strand, levelName(t.level),
+    ...t.outcomes.flatMap((o) => [o.text, ...(o.items ?? []), o.note ?? ''])].join('\n').toLowerCase()]));
+
+  // Every query word must match at the start of a word, so "ratio" does not hit "operations".
+  const matcher = (q) => {
+    const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return null;
+    const escRe = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const res = words.map((w) => new RegExp('(^|[^\\p{L}\\p{N}])' + escRe(w), 'u'));
+    return (text) => res.every((r) => r.test(text));
+  };
+
+  const state = { view: 'graph', sel: null, hover: null, q: '', hidden: new Set(), level: '', sort: { key: 'id', dir: 1 }, zoom: null };
+  const $ = (id) => document.getElementById(id);
+  const graphWrap = $('graphWrap'), sizer = $('sizer'), canvas = $('canvas'), panel = $('panel'), main = $('main');
+
+  // ---------- header ----------
+  const nOutcomes = topics.reduce((n, t) => n + t.outcomes.length, 0);
+  $('sub').textContent = `MOE 2021 Primary Mathematics syllabus (${source.edition.replace('Updated ', 'updated ')}) · ` +
+    `${topics.length} topics · ${nOutcomes} learning outcomes · ${dependencies.length} prerequisite links`;
+  $('srcLink').href = $('aboutSrc').href = source.url;
+  $('strands').innerHTML = STRANDS.map((s) =>
+    `<button class="chip" data-strand="${s.code}" aria-pressed="true" title="Show or hide ${esc(s.name)}"><span class="sw"></span>` +
+    `<span class="full">${esc(s.name)}</span><span class="short">${esc(s.name.split(' ')[0])}</span></button>`).join('');
+  $('level').innerHTML = `<option value="">All levels</option>` + LEVELS.map((l) => `<option value="${l}">${levelName(l)}</option>`).join('');
+
+  // ---------- graph layout ----------
+  const L = { nodeW: 200, nodeH: 44, colGap: 72, rowH: 54, pad: 20, head: 36, bandHead: 28, bandPad: 12, bandGap: 14 };
+  let G = { pos: new Map(), W: 0, H: 0 };
+
+  function layout() {
+    const pos = new Map(), bands = [];
+    const colX = (i) => L.pad + i * (L.nodeW + L.colGap);
+    let y = L.pad + L.head;
+    for (const s of STRANDS) {
+      if (state.hidden.has(s.code)) continue;
+      const cols = LEVELS.map((l) => topics.filter((t) => t.level === l && sc(t) === s.code)
+        .sort((a, b) => subRank[a.subStrand] - subRank[b.subStrand] || rank.get(a.id) - rank.get(b.id)));
+      const rows = Math.max(...cols.map((c) => c.length));
+      const top = y;
+      y += L.bandHead;
+      cols.forEach((c, ci) => c.forEach((t, ri) => pos.set(t.id, { x: colX(ci), y: y + ri * L.rowH })));
+      y += rows * L.rowH - (L.rowH - L.nodeH) + L.bandPad;
+      bands.push({ s, top, h: y - top });
+      y += L.bandGap;
+    }
+    const W = colX(LEVELS.length - 1) + L.nodeW + L.pad;
+    return { pos, bands, colX, W, H: y - L.bandGap + L.pad };
+  }
+
+  function edgePath(a, b) {
+    const ya = a.y + L.nodeH / 2, yb = b.y + L.nodeH / 2;
+    if (a.x === b.x) { // same level: loop out of the right edge and back in
+      const x = a.x + L.nodeW, bulge = 22 + Math.min(36, Math.abs(yb - ya) * 0.12);
+      return `M${x},${ya} C${x + bulge},${ya} ${x + bulge},${yb} ${x + 1},${yb}`;
+    }
+    const x1 = a.x + L.nodeW, x2 = b.x - 1, dx = Math.max(36, (x2 - x1) * 0.5);
+    return `M${x1},${ya} C${x1 + dx},${ya} ${x2 - dx},${yb} ${x2},${yb}`;
+  }
+
+  function renderGraph() {
+    const { pos, bands, colX, W, H } = layout();
+    G = { pos, W, H };
+    const marker = (id, cls) => `<marker id="${id}" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path class="${cls}" d="M0,0.6 L8,4 L0,7.4 z"/></marker>`;
+    const edges = dependencies.filter((d) => pos.has(d.topicId) && pos.has(d.prerequisiteId)).map((d) =>
+      `<path class="e" data-p="${d.prerequisiteId}" data-t="${d.topicId}" d="${edgePath(pos.get(d.prerequisiteId), pos.get(d.topicId))}"/>`).join('');
+    canvas.style.width = `${W}px`;
+    canvas.style.height = `${H}px`;
+    canvas.innerHTML =
+      LEVELS.map((l, i) => (i % 2 ? `<div class="colbg" style="left:${colX(i) - 14}px;width:${L.nodeW + 28}px"></div>` : '')).join('') +
+      bands.map((b) => `<div class="band" data-strand="${b.s.code}" style="top:${b.top}px;height:${b.h}px"><span><span class="sw"></span>${esc(b.s.name)}</span></div>`).join('') +
+      LEVELS.map((l, i) => `<div class="colhead" style="left:${colX(i)}px;top:${L.pad}px;width:${L.nodeW}px">${levelName(l)}</div>`).join('') +
+      `<svg class="edges" width="${W}" height="${H}" aria-hidden="true"><defs>${marker('ah', 'mk')}${marker('ah-anc', 'mk-anc')}${marker('ah-desc', 'mk-desc')}</defs><g id="edgeG">${edges}</g></svg>` +
+      topics.filter((t) => pos.has(t.id)).map((t) => {
+        const p = pos.get(t.id);
+        return `<button class="node" data-id="${t.id}" data-strand="${sc(t)}" style="left:${p.x}px;top:${p.y}px;width:${L.nodeW}px;height:${L.nodeH}px"` +
+          ` title="${esc(`${t.id} · ${t.name}`)}" aria-label="${esc(`${t.id} ${t.name}, ${levelName(t.level)}, ${t.subStrand}`)}">` +
+          `<span class="n">${esc(t.name)}</span><span class="m">${t.id} · ${esc(t.subStrand)}</span></button>`;
+      }).join('');
+    applyZoom();
+    applyHighlight();
+  }
+
+  const narrow = () => innerWidth <= 720;
+  const zoomLevel = () => state.zoom ?? Math.min(1.25, Math.max(narrow() ? 0.8 : 0.55, (graphWrap.clientWidth - 4) / G.W));
+  const panelCover = () => (!panel.hidden && !narrow() ? panel.offsetWidth + 24 : 0);
+  function applyZoom() {
+    if (!graphWrap.clientWidth) return; // graph view hidden; refit when shown
+    const z = zoomLevel();
+    canvas.style.transform = `scale(${z})`;
+    sizer.style.width = `${G.W * z + panelCover()}px`; // room to scroll nodes out from under the panel
+    sizer.style.height = `${G.H * z}px`;
+    $('zoomLabel').textContent = `${Math.round(z * 100)}%`;
+  }
+
+  function applyHighlight() {
+    const focus = state.hover ?? state.sel;
+    const q = matcher(state.q);
+    const anc = focus ? ancestors(focus) : new Set(), desc = focus ? descendants(focus) : new Set();
+    for (const el of canvas.querySelectorAll('.node')) {
+      const id = el.dataset.id, hit = q && q(hay.get(id));
+      el.classList.toggle('focus', id === focus);
+      el.classList.toggle('anc', anc.has(id));
+      el.classList.toggle('desc', desc.has(id));
+      el.classList.toggle('match', !!hit && !focus);
+      el.classList.toggle('dim', focus ? !(id === focus || anc.has(id) || desc.has(id)) : !!q && !hit);
+    }
+    const g = $('edgeG');
+    if (!g) return;
+    const lifted = [];
+    for (const el of g.querySelectorAll('path.e')) {
+      const p = el.dataset.p, t = el.dataset.t;
+      const isAnc = focus && anc.has(p) && (t === focus || anc.has(t));
+      const isDesc = focus && desc.has(t) && (p === focus || desc.has(p));
+      el.setAttribute('class', `e${isAnc ? ' anc' : isDesc ? ' desc' : focus || q ? ' dim' : ''}`);
+      if (isAnc || isDesc) lifted.push(el);
+    }
+    for (const el of lifted) g.appendChild(el); // draw highlighted paths on top
+  }
+
+  function revealNode(id) {
+    const p = G.pos.get(id);
+    if (!p || !graphWrap.clientWidth) return;
+    const z = zoomLevel(), w = graphWrap, covered = panelCover();
+    const cx = (p.x + L.nodeW / 2) * z, cy = (p.y + L.nodeH / 2) * z;
+    const visibleW = w.clientWidth - covered;
+    if (cx < w.scrollLeft + 40 || cx > w.scrollLeft + visibleW - 40 || cy < w.scrollTop + 30 || cy > w.scrollTop + w.clientHeight - 30)
+      w.scrollTo({ left: cx - visibleW / 2, top: cy - w.clientHeight / 2, behavior: 'smooth' });
+  }
+
+  // ---------- panel ----------
+  const go = (id) => `#/${state.view === 'links' ? 'topics' : state.view}/${id}`;
+  function linkList(edges, key, emptyText) {
+    if (!edges.length) return `<p class="empty">${emptyText}</p>`;
+    return `<ul class="links">${edges.map((d) => {
+      const o = byId.get(d[key]);
+      return `<li><a href="${go(o.id)}" data-strand="${sc(o)}"><span class="sw"></span><span class="lt">${esc(label(o))}</span><span class="lv">${o.id}</span></a>` +
+        `<div class="why">${esc(d.reason)}</div></li>`;
+    }).join('')}</ul>`;
+  }
+  const legend = document.querySelector('.legend');
+  const placePanel = () => {
+    panel.style.bottom = `${(state.view === 'graph' ? legend.offsetHeight : 0) + (narrow() ? 8 : 12)}px`;
+  };
+  function renderPanel() {
+    const t = state.sel && byId.get(state.sel);
+    panel.hidden = !t;
+    placePanel();
+    main.classList.toggle('has-panel', !!t);
+    if (!t) return;
+    const nAnc = ancestors(t.id).size, nDesc = descendants(t.id).size;
+    panel.innerHTML = `
+      <div class="ph"><div>
+        <div class="crumb" data-strand="${sc(t)}"><span class="sw"></span>${levelName(t.level)} · ${esc(t.strand)} › ${esc(t.subStrand)}</div>
+        <h2>${esc(t.name)}</h2>
+        <div class="meta"><code>${t.id}</code> · syllabus p.&nbsp;${t.sourcePage}</div>
+      </div><button class="x" id="close" aria-label="Close details">×</button></div>
+      <div class="stats">
+        <div><b>${nAnc}</b>topics come before it (${pre.get(t.id).length} direct)</div>
+        <div><b>${nDesc}</b>topics build on it (${post.get(t.id).length} direct)</div>
+      </div>
+      <h3>Learning outcomes</h3>
+      <ol class="outcomes">${t.outcomes.map((o) => `<li><span class="oid">${o.id.split('.').slice(2).join('.')}</span><span>${esc(o.text)}</span>` +
+        (o.items ? `<ul>${o.items.map((i) => `<li>${esc(i)}</li>`).join('')}</ul>` : '') +
+        (o.note ? `<span class="note">(${esc(o.note)})</span>` : '') + `</li>`).join('')}</ol>
+      <h3>Builds directly on</h3>
+      ${linkList(pre.get(t.id), 'prerequisiteId', 'Entry point: no prerequisites in v1.')}
+      <h3>Unlocks next</h3>
+      ${linkList(post.get(t.id), 'topicId', 'Nothing later in P1–P6 builds directly on this.')}
+      <div class="actions">
+        <a href="#/graph/${t.id}"${state.view === 'graph' ? ' aria-current="page"' : ''}>Show in graph</a>
+        <a href="#/topics/${t.id}"${state.view === 'topics' ? ' aria-current="page"' : ''}>Show in table</a>
+      </div>`;
+    $('close').onclick = () => { location.hash = `#/${state.view}`; };
+  }
+
+  // ---------- tables ----------
+  const chips = (edges, key) => edges.map((d) => {
+    const o = byId.get(d[key]);
+    return `<a class="idchip" data-strand="${sc(o)}" href="${go(o.id)}" title="${esc(label(o))}">${o.id}</a>`;
+  }).join('') || '<span class="arrow">—</span>';
+  const visible = (t) => !state.hidden.has(sc(t));
+  const sortVal = {
+    id: (t) => rank.get(t.id), level: (t) => rank.get(t.id), topic: (t) => label(t).toLowerCase(),
+    strand: (t) => STRANDS.findIndex((s) => s.name === t.strand), outcomes: (t) => t.outcomes.length,
+    pre: (t) => pre.get(t.id).length, post: (t) => post.get(t.id).length,
+  };
+
+  function renderTopics() {
+    const q = matcher(state.q), { key, dir } = state.sort;
+    const rows = topics.filter((t) => visible(t) && (!state.level || t.level === state.level) && (!q || q(hay.get(t.id))))
+      .sort((a, b) => {
+        const x = sortVal[key](a), y = sortVal[key](b);
+        return (x < y ? -dir : x > y ? dir : 0) || rank.get(a.id) - rank.get(b.id);
+      });
+    $('topicsCount').textContent = `Showing ${rows.length} of ${topics.length} topics. Click a row for details.`;
+    for (const th of document.querySelectorAll('#topicsTable th[data-key]'))
+      th.setAttribute('aria-sort', th.dataset.key === key ? (dir > 0 ? 'ascending' : 'descending') : 'none');
+    document.querySelector('#topicsTable tbody').innerHTML = rows.map((t) => `
+      <tr data-id="${t.id}"${t.id === state.sel ? ' class="sel"' : ''}>
+        <td class="mono">${t.id}</td><td>${t.level}</td>
+        <td><div class="tn">${esc(t.name)}</div><div class="ts">${esc(t.subStrand)}</div></td>
+        <td><span class="strand-cell" data-strand="${sc(t)}"><span class="sw"></span>${esc(t.strand)}</span></td>
+        <td><details><summary>${t.outcomes.length}</summary><ol>${t.outcomes.map((o) =>
+          `<li>${esc(o.text)}${o.items ? `: ${esc(o.items.join(', '))}` : ''}</li>`).join('')}</ol></details></td>
+        <td>${chips(pre.get(t.id), 'prerequisiteId')}</td>
+        <td>${chips(post.get(t.id), 'topicId')}</td>
+      </tr>`).join('');
+  }
+
+  function renderLinks() {
+    const q = matcher(state.q);
+    const rows = dependencies.filter((d) => {
+      const a = byId.get(d.prerequisiteId), b = byId.get(d.topicId);
+      return visible(a) && visible(b) && (!q || q(hay.get(a.id)) || q(hay.get(b.id)) || q(d.reason.toLowerCase()));
+    }).sort((x, y) => rank.get(x.topicId) - rank.get(y.topicId) || rank.get(x.prerequisiteId) - rank.get(y.prerequisiteId));
+    $('linksCount').textContent = `Showing ${rows.length} of ${dependencies.length} prerequisite links (all "hard" in v1).`;
+    const cell = (t) => `<a class="idchip" data-strand="${sc(t)}" href="#/topics/${t.id}">${t.id}</a> ${esc(label(t))}`;
+    document.querySelector('#linksTable tbody').innerHTML = rows.map((d) => `
+      <tr data-id="${d.topicId}"${d.topicId === state.sel ? ' class="sel"' : ''}>
+        <td>${cell(byId.get(d.prerequisiteId))}</td><td class="arrow">→</td>
+        <td>${cell(byId.get(d.topicId))}</td><td class="ts">${esc(d.reason)}</td>
+      </tr>`).join('');
+  }
+
+  // ---------- routing ----------
+  function route() {
+    const h = decodeURIComponent(location.hash);
+    const bare = h.match(/^#(P[1-6]\.[A-Z]{2}\.\d+)$/);
+    const m = h.match(/^#\/(graph|topics|links)(?:\/(.+))?$/);
+    const view = bare ? 'graph' : m ? m[1] : 'graph';
+    const id = bare ? bare[1] : m && m[2];
+    const viewChanged = view !== state.view;
+    state.view = view;
+    state.sel = id && byId.has(id) ? id : null;
+    state.hover = null;
+    document.body.dataset.view = view;
+    for (const a of document.querySelectorAll('.tabs a'))
+      a.dataset.view === view ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current');
+    for (const v of ['graph', 'topics', 'links']) $(`view-${v}`).classList.toggle('on', v === view);
+    renderPanel();
+    if (view === 'graph') { applyZoom(); applyHighlight(); if (state.sel) revealNode(state.sel); }
+    if (view === 'topics') { renderTopics(); revealRow(viewChanged); }
+    if (view === 'links') renderLinks();
+  }
+  function revealRow(center) {
+    const row = state.sel && document.querySelector(`#topicsTable tr[data-id="${state.sel}"]`);
+    if (row) row.scrollIntoView({ block: center ? 'center' : 'nearest' });
+  }
+
+  // ---------- events ----------
+  window.addEventListener('hashchange', route);
+  canvas.addEventListener('click', (e) => {
+    const n = e.target.closest('.node');
+    location.hash = n ? `#/graph/${n.dataset.id}` : '#/graph';
+  });
+  canvas.addEventListener('mouseover', (e) => {
+    const id = e.target.closest('.node')?.dataset.id ?? null;
+    if (id !== state.hover) { state.hover = id; applyHighlight(); }
+  });
+  canvas.addEventListener('mouseleave', () => { state.hover = null; applyHighlight(); });
+  for (const tbl of ['topicsTable', 'linksTable'])
+    $(tbl).querySelector('tbody').addEventListener('click', (e) => {
+      if (e.target.closest('a, summary')) return;
+      const tr = e.target.closest('tr[data-id]');
+      if (tr) location.hash = `#/topics/${tr.dataset.id}`;
+    });
+  $('topicsTable').querySelector('thead').addEventListener('click', (e) => {
+    const key = e.target.closest('th[data-key]')?.dataset.key;
+    if (!key) return;
+    state.sort = { key, dir: state.sort.key === key ? -state.sort.dir : 1 };
+    renderTopics();
+  });
+  $('q').addEventListener('input', (e) => {
+    state.q = e.target.value;
+    if (state.view === 'graph') applyHighlight();
+    if (state.view === 'topics') renderTopics();
+    if (state.view === 'links') renderLinks();
+  });
+  $('level').addEventListener('change', (e) => { state.level = e.target.value; renderTopics(); });
+  $('strands').addEventListener('click', (e) => {
+    const b = e.target.closest('.chip');
+    if (!b) return;
+    const code = b.dataset.strand, on = !state.hidden.has(code);
+    if (on && state.hidden.size === STRANDS.length - 1) return; // keep at least one strand visible
+    on ? state.hidden.add(code) : state.hidden.delete(code);
+    b.setAttribute('aria-pressed', String(!on));
+    renderGraph(); renderTopics(); renderLinks();
+  });
+  $('zoomIn').onclick = () => { state.zoom = Math.min(2, zoomLevel() * 1.2); applyZoom(); };
+  $('zoomOut').onclick = () => { state.zoom = Math.max(0.3, zoomLevel() / 1.2); applyZoom(); };
+  $('zoomFit').onclick = () => { state.zoom = null; applyZoom(); };
+  window.addEventListener('resize', () => { placePanel(); applyZoom(); });
+  // ---------- about ----------
+  const about = $('about'), SEEN = 'sgmg.aboutSeen';
+  const closeAbout = () => {
+    about.close();
+    try { localStorage.setItem(SEEN, '1'); } catch {}
+  };
+  $('aboutBtn').onclick = () => about.showModal();
+  $('aboutClose').onclick = $('aboutOk').onclick = closeAbout;
+  about.addEventListener('cancel', (e) => { e.preventDefault(); closeAbout(); });
+  about.addEventListener('click', (e) => { if (e.target === about) closeAbout(); }); // backdrop
+  const seen = () => { try { return localStorage.getItem(SEEN) === '1'; } catch { return false; } };
+
+  document.addEventListener('keydown', (e) => {
+    if (about.open) return;
+    if (e.key === 'Escape' && state.sel) location.hash = `#/${state.view}`;
+    if (e.key === '/' && document.activeElement !== $('q')) { e.preventDefault(); $('q').focus(); }
+  });
+
+  renderGraph();
+  state.view = null;
+  route();
+  if (!location.hash && !seen()) about.showModal(); // first visit to the bare URL
+})();
+</script>
+</body>
+</html>

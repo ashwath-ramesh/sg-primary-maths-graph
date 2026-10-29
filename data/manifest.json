@@ -1,0 +1,150 @@
+{
+  "dataset": "SG MOE Primary Mathematics Knowledge Graph",
+  "version": "v1",
+  "syllabus": {
+    "title": "Mathematics Syllabus, Primary One to Six (2021 syllabus)",
+    "publisher": "Curriculum Planning and Development Division, Ministry of Education, Singapore",
+    "edition": "Updated October 2025",
+    "url": "https://www.moe.gov.sg/api/media/92bff26d-b2b4-4535-b868-b8415c744b91/2021-Primary-Mathematics-Syllabus-P1-to-P6-Updated-October-2025.pdf",
+    "section": "Section 5: Content by Level (pp. 31-44), standard track only",
+    "copyright": "Outcome text (c) 2025 Curriculum Planning and Development Division. Reproduced verbatim for personal and non-commercial use."
+  },
+  "counts": {
+    "topics": 66,
+    "outcomes": 202,
+    "dependencies": 95,
+    "entryPoints": 5,
+    "byLevel": {
+      "P1": {
+        "topics": 8,
+        "outcomes": 32
+      },
+      "P2": {
+        "topics": 11,
+        "outcomes": 30
+      },
+      "P3": {
+        "topics": 12,
+        "outcomes": 34
+      },
+      "P4": {
+        "topics": 15,
+        "outcomes": 42
+      },
+      "P5": {
+        "topics": 12,
+        "outcomes": 37
+      },
+      "P6": {
+        "topics": 8,
+        "outcomes": 27
+      }
+    },
+    "byStrand": {
+      "Number and Algebra": 36,
+      "Measurement and Geometry": 25,
+      "Statistics": 5
+    }
+  },
+  "codes": {
+    "levels": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6"
+    ],
+    "strands": [
+      {
+        "code": "NA",
+        "name": "Number and Algebra"
+      },
+      {
+        "code": "MG",
+        "name": "Measurement and Geometry"
+      },
+      {
+        "code": "ST",
+        "name": "Statistics"
+      }
+    ],
+    "subStrands": [
+      {
+        "code": "WN",
+        "name": "Whole Numbers",
+        "strand": "NA"
+      },
+      {
+        "code": "MO",
+        "name": "Money",
+        "strand": "NA"
+      },
+      {
+        "code": "FR",
+        "name": "Fractions",
+        "strand": "NA"
+      },
+      {
+        "code": "DE",
+        "name": "Decimals",
+        "strand": "NA"
+      },
+      {
+        "code": "PC",
+        "name": "Percentage",
+        "strand": "NA"
+      },
+      {
+        "code": "RT",
+        "name": "Rate",
+        "strand": "NA"
+      },
+      {
+        "code": "RA",
+        "name": "Ratio",
+        "strand": "NA"
+      },
+      {
+        "code": "AL",
+        "name": "Algebra",
+        "strand": "NA"
+      },
+      {
+        "code": "ME",
+        "name": "Measurement",
+        "strand": "MG"
+      },
+      {
+        "code": "AV",
+        "name": "Area and Volume",
+        "strand": "MG"
+      },
+      {
+        "code": "GE",
+        "name": "Geometry",
+        "strand": "MG"
+      },
+      {
+        "code": "DR",
+        "name": "Data Representation and Interpretation",
+        "strand": "ST"
+      },
+      {
+        "code": "DA",
+        "name": "Data Analysis",
+        "strand": "ST"
+      }
+    ]
+  },
+  "files": {
+    "topics.json": {
+      "bytes": 33917,
+      "sha256": "55062bf87f3b7c25802ac79acd6cd1f204c265fa0bb22241a88cdb2842e7c6e6"
+    },
+    "dependencies.json": {
+      "bytes": 15239,
+      "sha256": "f1f69ed3c1850fbd927178d57d2083bf2d6cc9f8cbf048ebf7420316939cc34c"
+    }
+  }
+}
