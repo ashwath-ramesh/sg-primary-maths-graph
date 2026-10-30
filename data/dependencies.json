@@ -1,7 +1,7 @@
 {
   "version": "v1",
   "note": "Directed edges: topicId depends on prerequisiteId. Editorial (not stated in the MOE syllabus). v1 keeps only hard, direct prerequisites; transitive edges are omitted.",
-  "edgeCount": 103,
+  "edgeCount": 105,
   "dependencies": [
     { "topicId": "P1.WN.2", "prerequisiteId": "P1.WN.1", "strength": "hard", "reason": "Adding and subtracting within 100 needs counting, place value and ordering of numbers to 100" },
     { "topicId": "P1.WN.3", "prerequisiteId": "P1.WN.2", "strength": "hard", "reason": "Multiplication is introduced as repeated addition of equal groups" },
@@ -101,12 +101,14 @@
 
     { "topicId": "P6.FR.1", "prerequisiteId": "P5.FR.2", "strength": "hard", "reason": "Dividing by a fraction is carried out as multiplying fractions" },
     { "topicId": "P6.PC.1", "prerequisiteId": "P5.PC.1", "strength": "hard", "reason": "Reverses finding a percentage part of a whole" },
-    { "topicId": "P6.RA.1", "prerequisiteId": "P3.FR.1", "strength": "hard", "reason": "Equivalent ratios and the fraction-ratio relationship mirror equivalent fractions" },
+    { "topicId": "P6.RA.1", "prerequisiteId": "P3.FR.1", "strength": "hard", "reason": "Equivalent ratios and simplest form mirror equivalent fractions" },
     { "topicId": "P6.RA.1", "prerequisiteId": "P4.WN.2", "strength": "hard", "reason": "Simplest form of a ratio divides all terms by a common factor" },
+    { "topicId": "P6.RA.1", "prerequisiteId": "P4.FR.2", "strength": "hard", "reason": "Relating ratio to fraction treats each part as a fraction of the whole set, e.g. 2:3 means 2/5 of the total" },
     { "topicId": "P6.AL.1", "prerequisiteId": "P5.WN.2", "strength": "hard", "reason": "Evaluating and simplifying expressions follows the order of operations" },
     { "topicId": "P6.AL.1", "prerequisiteId": "P5.FR.1", "strength": "hard", "reason": "Writing a ÷ 3 as a/3 uses division as a fraction" },
     { "topicId": "P6.AV.1", "prerequisiteId": "P5.AV.1", "strength": "hard", "reason": "Extends area of composite figures with triangles to include semicircles and quarter circles" },
     { "topicId": "P6.AV.1", "prerequisiteId": "P4.DE.3", "strength": "hard", "reason": "Area and circumference with π ≈ 3.14 multiply a decimal by a whole number" },
+    { "topicId": "P6.AV.1", "prerequisiteId": "P4.DE.2", "strength": "hard", "reason": "Perimeter and area of semicircles and composite figures add decimal lengths and areas, e.g. 15.7 + 10" },
     { "topicId": "P6.AV.2", "prerequisiteId": "P5.AV.2", "strength": "hard", "reason": "Reverses the volume formula to find a missing dimension" },
     { "topicId": "P6.GE.1", "prerequisiteId": "P5.GE.3", "strength": "hard", "reason": "Uses properties of parallelograms, rhombuses and trapeziums" },
     { "topicId": "P6.GE.1", "prerequisiteId": "P5.GE.2", "strength": "hard", "reason": "Uses triangle properties and the angle sum of a triangle" },

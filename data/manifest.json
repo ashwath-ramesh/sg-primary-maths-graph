@@ -12,7 +12,7 @@
   "counts": {
     "topics": 66,
     "outcomes": 202,
-    "dependencies": 103,
+    "dependencies": 105,
     "entryPoints": 4,
     "byLevel": {
       "P1": {
@@ -143,8 +143,8 @@
       "sha256": "55062bf87f3b7c25802ac79acd6cd1f204c265fa0bb22241a88cdb2842e7c6e6"
     },
     "dependencies.json": {
-      "bytes": 16620,
-      "sha256": "044fc36b158d9e88ba9cc975ee5815011e1c1aa47fea1a2cfc4f6d402f32677f"
+      "bytes": 16996,
+      "sha256": "f21ce9c4c0c2e850442aeb4099fc2065e0a09917a16c7b4903216bcd570a3682"
     }
   }
 }
