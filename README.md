@@ -4,7 +4,7 @@ An unofficial **foundations and diagnosis map** of the **Singapore MOE 2021 Prim
 
 **Live:** https://ashwath-ramesh.github.io/sg-primary-maths-graph/
 
-**v1:** 66 topics · 202 learning outcomes · 103 prerequisite links.
+**v1:** 66 topics · 202 learning outcomes · 105 prerequisite links.
 
 ## Source
 
@@ -51,7 +51,7 @@ There are two kinds of link. A *progression* link joins the same idea at the nex
 ```
 source/                   MOE syllabus PDF, unmodified
 data/topics.json          66 topics with verbatim outcomes (source of truth)
-data/dependencies.json    103 prerequisite links with reasons (source of truth)
+data/dependencies.json    105 prerequisite links with reasons (source of truth)
 data/manifest.json        generated: counts, code tables, checksums
 schema/*.schema.json      JSON Schema for the two data files (build.mjs enforces the same rules)
 scripts/build.mjs         validator and generator (Node, no dependencies)
